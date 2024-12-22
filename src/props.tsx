@@ -6,6 +6,7 @@ export interface InputComponentProps{
     placeholder : string
     inputValue: string
     inputType: 'text'| 'password' 
+    hasError: boolean
     setInput:  React.Dispatch<React.SetStateAction<string>>
 }
  export interface FeedbackProps{

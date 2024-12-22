@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import LoginButton from '../components/LoginButton';
 import InputComponent from '../components/InputComponent';
 import LoginFeedback from '../components/LoginFeedback';
+import './index.css'
 
 
 const Login = () => {
@@ -17,16 +18,29 @@ const Login = () => {
   const [correctPassword, setPasswordBool] = useState<boolean|null>(null)
   const [correctUsername, setUsernameBool] = useState<boolean|null>(null)
 
-  const feedbackMsg = ['Login successful', 'Incorrect password', 'Username not found']
   const [loginFeedback, setFeedback] = useState('')
   const [alertVisible, setAlertVisible] = useState(false)
 
   const authUser=()=>{
-    users.find(user=> user.username ===username)? setUsernameBool(true): setUsernameBool(false); //checks username
-    users.find(user=> user.username == username && user.password == password) ? setPasswordBool(true): setPasswordBool(false) //checks matching password
-    username==='' && setUsernameBool(null)
-    password==='' && setPasswordBool(null)
-    handleFeedback();
+    const userExists = users.find(user => user.username === username);
+    const passwordCorrect = userExists && userExists.password === password;
+
+    // Set username and password states
+    setUsernameBool(userExists ? true : false);
+    setPasswordBool(passwordCorrect ? true : false);
+
+    // Handle feedback directly before setting state
+    if (passwordCorrect && userExists) {
+      setFeedback('Login successful!');
+    } else if (!passwordCorrect && userExists) {
+      setFeedback('Incorrect password');
+      clearInput();
+    } else if (!userExists) {
+      setFeedback('Username not found');
+      clearInput();
+    }
+
+    setAlertVisible(true);
   }
 
   const clearInput=()=>{
@@ -36,7 +50,7 @@ const Login = () => {
 
   const handleFeedback = ()=>{
     if (correctPassword && correctUsername){
-      setFeedback('Login successful')
+      setFeedback('Login successful!')
     } else if (!correctPassword && correctUsername){
       setFeedback('Incorrect password')
       clearInput();
@@ -51,9 +65,9 @@ const Login = () => {
     <div className="container d-flex flex-column justify-content-center">
       {alertVisible && <LoginFeedback feedback={loginFeedback} color={correctPassword?'text-success':'text-danger'} onClose={()=>setAlertVisible(false)} />}
 
-      <div className={`${(!correctPassword===false || correctUsername===false) && 'border border-danger'} card mb-3`} >
+      <div className={`${(correctPassword===false || correctUsername===false) && 'border border-danger'} card mb-3`} >
         <div className="card-body">
-          <h3 className="card-title text-start">Nice to see you again</h3>
+          <h4 className="card-title text-start">Nice to see you again</h4>
 
           <form onSubmit={e=>{
           e.preventDefault();
@@ -61,12 +75,12 @@ const Login = () => {
 
             {/* Email or Username */}
             <div className="mb-3 mt-4  text-start">
-              <InputComponent placeholder='username' inputValue={username} inputType='text' setInput={setUsername}/>
+              <InputComponent placeholder='username' inputValue={username} inputType='text' setInput={setUsername} hasError={correctPassword===false}/>
             </div>
 
             {/* Password */}
             <div className="text-start mb-3">
-              <InputComponent placeholder='password' inputValue={password} inputType='password' setInput={setPassword}/>
+              <InputComponent placeholder='password' inputValue={password} inputType='password' setInput={setPassword} hasError={correctPassword===false}/>
             </div>
 
             {/* Remember me & Forgot Password */}
