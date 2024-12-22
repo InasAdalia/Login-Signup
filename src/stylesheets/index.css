@@ -44,20 +44,13 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 } */
- .container{
-  max-width: fit-content!important;
-  height: 100vh;
- }
 
- .icon-small{
+.logo{
+  width: 50px;
+  align-self: center;
+}
+
+.icon-small{
   max-width:20px;
   max-height: 20px;
- }
-
- form{
-  width: 20rem;
- }
-
- button{
-  width:100%;
- }
+}

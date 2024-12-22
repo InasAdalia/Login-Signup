@@ -1,12 +1,14 @@
 import React, { useState } from 'react'
-import LoginButton from '../components/LoginButton';
+import '../stylesheets/login.css';
 import InputComponent from '../components/InputComponent';
 import LoginFeedback from '../components/LoginFeedback';
-import './index.css'
+import { Link } from 'react-router-dom';
+import SubmitButton from '../components/SubmitButton';
+
 
 
 const Login = () => {
-
+ 
   const users = [
     {username: 'inas', password:'123'},
     {username: 'adalia', password: '321'}
@@ -62,19 +64,21 @@ const Login = () => {
   }
   
   return (
-    <div className="container d-flex flex-column justify-content-center">
+    <div className="login-div d-flex flex-column justify-content-center">
+
+      {/* Login Feedback Alert */}
       {alertVisible && <LoginFeedback feedback={loginFeedback} color={correctPassword?'text-success':'text-danger'} onClose={()=>setAlertVisible(false)} />}
 
-      <div className={`${(correctPassword===false || correctUsername===false) && 'border border-danger'} card mb-3`} >
+      <div className={`card ${(correctPassword===false || correctUsername===false) && 'border border-danger'} `} >
         <div className="card-body">
-          <h4 className="card-title text-start">Nice to see you again</h4>
+          <h4 className="card-title text-start"> Nice to see you again</h4>
 
           <form onSubmit={e=>{
           e.preventDefault();
           authUser(); }}>
 
             {/* Email or Username */}
-            <div className="mb-3 mt-4  text-start">
+            <div className="text-start mb-3 mt-4">
               <InputComponent placeholder='username' inputValue={username} inputType='text' setInput={setUsername} hasError={correctPassword===false}/>
             </div>
 
@@ -95,9 +99,12 @@ const Login = () => {
             </div>
 
             {/* Login Button Set */}
-            <LoginButton isDisabled={username==='' || password===''}/>
+            <SubmitButton buttonAction='Login' isDisabled={username==='' || password===''}/>
 
-            </form>      
+            </form>
+
+            <p className="text-center text-secondary mt-3 fs-6">Don't have an account yet? <Link className="link-opacity-100" to="/signup">Create an account</Link></p>
+
         </div>
       </div>
     </div>

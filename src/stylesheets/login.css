@@ -1,0 +1,15 @@
+.login-div{
+width: 25rem;
+height: 100vh;
+justify-self: center;
+}
+  
+
+
+button{
+    width:100%;
+}
+
+.card{
+    padding:15px !important;
+}

@@ -1,0 +1,17 @@
+.bg-image{
+    height: 100vh;
+}
+
+.signup-div{
+    max-width: 110vh;
+    padding: 100px;
+}
+
+button{
+    width:100%;
+}
+
+.form-footnote,.form-check-label{
+    font-size: small !important;
+    /* text-decoration-color: #dc3545; */
+}

@@ -1,5 +1,6 @@
 export interface LoginButtonProps{
     isDisabled: boolean
+    buttonAction: string
 }
 
 export interface InputComponentProps{
@@ -13,4 +14,8 @@ export interface InputComponentProps{
     feedback : string
     color : 'text-success' | 'text-danger'
     onClose: ()=>void
+ }
+
+ export interface InputFeedbackProps{
+    feedback: string
  }
