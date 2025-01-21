@@ -1,7 +1,7 @@
 import googleLogo from '../assets/google.png';
 import { LoginButtonProps } from '../props';
 
-const LoginButton = ({buttonAction, isDisabled}: LoginButtonProps) => {
+const SubmitButton = ({buttonAction, isDisabled}: LoginButtonProps) => {
   return (
     <>
     <button type="submit" 
@@ -21,4 +21,4 @@ const LoginButton = ({buttonAction, isDisabled}: LoginButtonProps) => {
   )
 }
 
-export default LoginButton
+export default SubmitButton

@@ -4,37 +4,29 @@ import InputComponent from '../components/InputComponent';
 import LoginFeedback from '../components/LoginFeedback';
 import { Link } from 'react-router-dom';
 import SubmitButton from '../components/SubmitButton';
+import { userDatabase } from '../UserDatabase';
 
-
-
-const Login = () => {
- 
-  const users = [
-    {username: 'inas', password:'123'},
-    {username: 'adalia', password: '321'}
-  ]
+const handleLogin = (userDatabase: any[]) =>{
 
   const [username, setUsername ] = useState<string>('');
   const [password, setPassword ] = useState<string>('');
-
-  const [correctPassword, setPasswordBool] = useState<boolean|null>(null)
-  const [correctUsername, setUsernameBool] = useState<boolean|null>(null)
-
-  const [loginFeedback, setFeedback] = useState('')
-  const [alertVisible, setAlertVisible] = useState(false)
-
+  const [isPasswordCorrect, setPasswordBool] = useState<boolean|null>(null)
+  const [isUsernameCorrect, setUsernameBool] = useState<boolean|null>(null)
+  const [isAlertVisible, setAlertVisibility] = useState(false)
+  const [feedback, setFeedback] = useState('')
+  
   const authUser=()=>{
-    const userExists = users.find(user => user.username === username);
-    const passwordCorrect = userExists && userExists.password === password;
+    const userExists = userDatabase.find(user => user.username === username);
+    const isPasswordCorrect = userExists && userExists.password === password;
 
     // Set username and password states
     setUsernameBool(userExists ? true : false);
-    setPasswordBool(passwordCorrect ? true : false);
+    setPasswordBool(isPasswordCorrect ? true : false);
 
     // Handle feedback directly before setting state
-    if (passwordCorrect && userExists) {
+    if (userExists && isPasswordCorrect) {
       setFeedback('Login successful!');
-    } else if (!passwordCorrect && userExists) {
+    } else if (userExists && !isPasswordCorrect) {
       setFeedback('Incorrect password');
       clearInput();
     } else if (!userExists) {
@@ -42,7 +34,7 @@ const Login = () => {
       clearInput();
     }
 
-    setAlertVisible(true);
+    setAlertVisibility(true);
   }
 
   const clearInput=()=>{
@@ -50,26 +42,38 @@ const Login = () => {
     setPassword('');
   }
 
-  const handleFeedback = ()=>{
-    if (correctPassword && correctUsername){
-      setFeedback('Login successful!')
-    } else if (!correctPassword && correctUsername){
-      setFeedback('Incorrect password')
-      clearInput();
-    } else if(!correctUsername){
-      setFeedback('Username not found')
-      clearInput;
-    }
-    setAlertVisible(true)
+  return {
+    username,setUsername,
+    password,setPassword,
+    isPasswordCorrect,
+    isUsernameCorrect,
+    isAlertVisible, setAlertVisibility,
+    feedback,
+    authUser
   }
-  
+}
+
+
+
+const Login = () => {
+
+  const {
+    username,setUsername,
+    password,setPassword,
+    isPasswordCorrect,
+    isUsernameCorrect, 
+    isAlertVisible, setAlertVisibility,
+    feedback,
+    authUser,
+  } = handleLogin(userDatabase);
+ 
   return (
     <div className="login-div d-flex flex-column justify-content-center">
 
       {/* Login Feedback Alert */}
-      {alertVisible && <LoginFeedback feedback={loginFeedback} color={correctPassword?'text-success':'text-danger'} onClose={()=>setAlertVisible(false)} />}
+      {isAlertVisible && <LoginFeedback feedback={feedback} color={isPasswordCorrect?'text-success':'text-danger'} onClose={()=>setAlertVisibility(false)} />}
 
-      <div className={`card ${(correctPassword===false || correctUsername===false) && 'border border-danger'} `} >
+      <div className={`card ${(isPasswordCorrect===false || isUsernameCorrect===false) && 'border border-danger'} `} >
         <div className="card-body">
           <h4 className="card-title text-start"> Nice to see you again</h4>
 
@@ -77,14 +81,14 @@ const Login = () => {
           e.preventDefault();
           authUser(); }}>
 
-            {/* Email or Username */}
+            {/* Input Email or Username */}
             <div className="text-start mb-3 mt-4">
-              <InputComponent placeholder='username' inputValue={username} inputType='text' setInput={setUsername} hasError={correctPassword===false}/>
+              <InputComponent placeholder='username' inputValue={username} inputType='text' setInput={setUsername} hasError={isPasswordCorrect===false}/>
             </div>
 
-            {/* Password */}
+            {/* Input Password */}
             <div className="text-start mb-3">
-              <InputComponent placeholder='password' inputValue={password} inputType='password' setInput={setPassword} hasError={correctPassword===false}/>
+              <InputComponent placeholder='password' inputValue={password} inputType='password' setInput={setPassword} hasError={isPasswordCorrect===false}/>
             </div>
 
             {/* Remember me & Forgot Password */}
@@ -101,9 +105,9 @@ const Login = () => {
             {/* Login Button Set */}
             <SubmitButton buttonAction='Login' isDisabled={username==='' || password===''}/>
 
-            </form>
+          </form>
 
-            <p className="text-center text-secondary mt-3 fs-6">Don't have an account yet? <Link className="link-opacity-100" to="/signup">Create an account</Link></p>
+          <p className="text-center text-secondary mt-3 fs-6">Don't have an account yet? <Link className="link-opacity-100" to="/signup">Create an account</Link></p>
 
         </div>
       </div>

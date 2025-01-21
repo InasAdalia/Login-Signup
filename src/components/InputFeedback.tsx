@@ -3,7 +3,7 @@ import { InputFeedbackProps } from '../props'
 
 const InputFeedback = ({feedback}: InputFeedbackProps) => {
   return (
-    <label className="form-footnote text-secondary mt-1">{feedback}</label>
+    <label className="form-footnote text-danger mt-1">{feedback}</label>
   )
 }
 
